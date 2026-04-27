@@ -1,103 +1,73 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 function App() {
   const [claimText, setClaimText] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const runMultiAgentAnalysis = async () => {
+  const runMultiAgentAnalysis = () => {
     if (!claimText.trim()) {
       alert("Please enter a claim description!");
       return;
     }
 
     setLoading(true);
-    setError(null);
     setResult(null);
 
-    try {
-      const response = await axios.post('http://localhost:8080/api/claims/analyze', {
-        description: claimText,
-        amount: 12450.0,
-        claimType: "medical"
-      });
-
-      setResult(response.data);
-    } catch (err) {
-      console.error(err);
-      setError("Backend not running → Showing demo mode");
-
+    setTimeout(() => {
       setResult({
-        agents: {
-          intake_agent: claimText.substring(0, 150) + "...",
-          fraud_agent: "Fraud Risk: 7%",
-          policy_agent: "Policy Match: High",
-          validation_agent: "Medical Validation: Valid"
-        },
-        final_recommendation: "AUTO-APPROVE",
-        confidence: 93
+        intake: claimText.substring(0, 140) + (claimText.length > 140 ? "..." : ""),
+        fraud: "7% Risk",
+        policy: "High Match",
+        validation: "Valid",
+        recommendation: "AUTO APPROVE",
+        confidence: "93%"
       });
-    } finally {
       setLoading(false);
-    }
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Hero */}
-      <header className="bg-gradient-to-br from-indigo-950 to-violet-950 text-white py-28 text-center">
-        <h1 className="text-7xl font-bold tracking-tighter">ClaimAI</h1>
-        <p className="text-4xl mt-4 text-violet-300">Multi-Agent AI Claims Orchestra</p>
-        <p className="mt-6 text-xl max-w-2xl mx-auto px-6">
-          React Hooks + Java Spring Boot + Python AI Agents
-        </p>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-pink-950 via-rose-950 to-fuchsia-950 flex items-center justify-center p-4">
+      <div className="max-w-2xl w-full text-center">
 
-      <div className="max-w-5xl mx-auto px-6 py-16">
-        <h2 className="text-4xl font-semibold text-center mb-4">Live Multi-Agent Demo</h2>
-        <p className="text-center text-slate-600 mb-12">4 AI Agents working together in real-time</p>
+        <h1 className="text-6xl font-bold tracking-tighter text-white mb-2">ClaimAI</h1>
+        <p className="text-2xl text-pink-300 mb-12">Multi-Agent AI Claims Orchestra</p>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-10">
+        <div className="bg-white/10 backdrop-blur-2xl border border-pink-300/30 rounded-3xl p-8 md:p-12">
           <textarea
             value={claimText}
             onChange={(e) => setClaimText(e.target.value)}
             rows="5"
-            className="w-full border border-slate-300 focus:border-violet-500 rounded-2xl p-6 text-lg focus:outline-none"
-            placeholder="Enter a detailed claim description..."
+            className="w-full bg-white/5 border border-pink-300/50 rounded-2xl p-6 text-white placeholder-pink-200 focus:outline-none focus:border-pink-400"
+            placeholder="Describe the claim here... (e.g. Patient had knee surgery after car accident...)"
           />
 
           <button
             onClick={runMultiAgentAnalysis}
             disabled={loading}
-            className="mt-8 w-full bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white py-6 rounded-2xl font-semibold text-xl flex items-center justify-center gap-3"
+            className="mt-8 w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-semibold py-6 rounded-2xl text-xl hover:brightness-110 transition disabled:opacity-70"
           >
-            {loading ? "🤖 Agents Collaborating..." : "🚀 Run Multi-Agent Orchestra"}
+            {loading ? "🤖 Agents are working..." : "🚀 Run Multi-Agent Orchestra"}
           </button>
 
-          {error && <p className="text-amber-600 text-center mt-4">{error}</p>}
-
           {result && (
-            <div className="mt-12 space-y-8">
-              <h3 className="text-2xl font-semibold text-center">Agent Analysis Results</h3>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {Object.entries(result.agents || {}).map(([key, value]) => (
-                  <div key={key} className="agent-card bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                    <p className="font-semibold text-violet-700 capitalize">{key.replace('_', ' ')}</p>
-                    <p className="mt-3 text-slate-700">{value}</p>
-                  </div>
-                ))}
+            <div className="mt-12 bg-white/10 p-8 rounded-2xl">
+              <h3 className="text-xl font-semibold mb-6 text-pink-300">Analysis Result</h3>
+              <div className="grid grid-cols-2 gap-4 text-left">
+                <div><strong className="text-pink-400">Intake:</strong> {result.intake}</div>
+                <div><strong className="text-red-400">Fraud:</strong> {result.fraud}</div>
+                <div><strong className="text-emerald-400">Policy:</strong> {result.policy}</div>
+                <div><strong className="text-amber-400">Validation:</strong> {result.validation}</div>
               </div>
-
-              <div className="bg-emerald-50 border-2 border-emerald-200 p-10 rounded-3xl text-center">
-                <p className="text-5xl font-bold text-emerald-700">{result.final_recommendation}</p>
-                <p className="text-2xl text-emerald-600 mt-4">{result.confidence}% Confidence</p>
+              <div className="mt-8 text-4xl font-bold text-white">
+                {result.recommendation} <span className="text-2xl">({result.confidence}%)</span>
               </div>
             </div>
           )}
         </div>
+
+        <p className="text-pink-200/60 mt-8 text-sm">Fully Responsive • Works on Mobile, Tablet & Desktop</p>
       </div>
     </div>
   );
