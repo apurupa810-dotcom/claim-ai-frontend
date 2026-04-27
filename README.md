@@ -1,36 +1,26 @@
 # ClaimAI Frontend
 
-**Modern React Frontend** for the ClaimAI Multi-Agent AI Claims Platform.
-
-Built with **React 19 + Hooks** and Tailwind CSS.
+**Modern React 19 Frontend** for the ClaimAI Multi-Agent AI Claims Processing Platform.
 
 ## 🚀 Live Demo
-**https://apurupa810-dotcom.github.io/claim-ai-frontend/**
+**[https://apurupa810-dotcom.github.io/claim-ai-frontend/](https://apurupa810-dotcom.github.io/claim-ai-frontend/)**
 
 ## Features
 
-- Clean, responsive UI
-- Multi-Agent AI Orchestra visualization
-- Real-time claim analysis demo
-- Loading animations
-- Backend integration (Java + Python)
+- Beautiful, responsive UI with rose-pink modern theme
+- Interactive Multi-Agent AI demo
+- Real-time claim analysis visualization
+- Fully responsive (Mobile, Tablet, Desktop)
+- Glassmorphism design with smooth animations
+- Ready to connect with Java Spring Boot + Python AI backend
 
 ## Tech Stack
 
-- React 19
-- React Hooks (useState, useEffect)
-- Tailwind CSS
-- Axios (for API calls)
-- GitHub Pages
+- **React 19** with Hooks
+- **Tailwind CSS** (via CDN + custom CSS)
+- **Modern JavaScript (ES6+)**
+- Axios (for backend integration)
+- Responsive Design
+- GitHub Pages Deployment
 
-## How to Run Locally
-
-```bash
-npm install
-npm start
-#PROJECT STRUCTURE
-src/
-├── App.js          # Main Multi-Agent Demo
-├── App.css
-├── index.js
-└── ...
+## Project Structure
