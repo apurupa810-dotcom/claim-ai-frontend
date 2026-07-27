@@ -88,3 +88,66 @@ function App() {
 
   // Render form and result using result fields.
 }
+{result && (
+  <div className="result">
+    <h3>Analysis Complete</h3>
+
+    {result.fallback && (
+      <div className="fallback-warning">
+        Fallback analysis was used.
+      </div>
+    )}
+
+    <div className="result-grid">
+      <ResultItem
+        label="Intake Agent"
+        value={result.agents?.intakeAgent}
+      />
+
+      <ResultItem
+        label="Fraud Agent"
+        value={
+          result.agents?.fraudAgent
+          || result.fraudRisk
+        }
+      />
+
+      <ResultItem
+        label="Policy Agent"
+        value={result.agents?.policyAgent}
+      />
+
+      <ResultItem
+        label="Validation Agent"
+        value={
+          result.agents?.validationAgent
+        }
+      />
+    </div>
+
+    <div className="final-result">
+      {formatRecommendation(
+        result.recommendation
+      )}
+
+      <span>
+        {result.approvalConfidence}
+        {" "}Confidence
+      </span>
+    </div>
+  </div>
+)}
+function ResultItem({ label, value }) {
+  return (
+    <div className="result-item">
+      <strong>{label}</strong>
+      <p>{value || "Not available"}</p>
+    </div>
+  );
+}
+
+function formatRecommendation(value) {
+  return value
+    ? value.replaceAll("_", " ")
+    : "Not available";
+}
