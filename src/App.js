@@ -1,67 +1,90 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+
+const initialForm = {
+  claimId: "",
+  description: "",
+  amount: "",
+  patientName: "",
+  policyNumber: "",
+  claimType: "MEDICAL",
+};
 
 function App() {
-  const [claimText, setClaimText] = useState('');
+  const [formData, setFormData] =
+    useState(initialForm);
+
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] =
+    useState(false);
 
-  const runMultiAgentAnalysis = () => {
-    if (!claimText.trim()) {
-      alert("Please describe the claim!");
-      return;
-    }
+  const apiUrl =
+    process.env.REACT_APP_CLAIM_API_URL
+    || "http://localhost:8080/api/claims/analyze";
 
-    setLoading(true);
-    setResult(null);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setTimeout(() => {
-      setResult(true);
-      setLoading(false);
-    }, 1500);
+    setFormData(previous => ({
+      ...previous,
+      [name]: value,
+    }));
   };
 
-  return (
-    <div className="App">
-      <div className="main-container">
-        <h1 className="title">ClaimAI</h1>
-        <p className="subtitle">Multi-Agent AI Claims Orchestra</p>
+  const runMultiAgentAnalysis = async (
+    event
+  ) => {
+    event.preventDefault();
 
-        <div className="demo-card">
-          <textarea
-            value={claimText}
-            onChange={(e) => setClaimText(e.target.value)}
-            placeholder="Describe the claim here... (e.g., Patient had knee surgery after car accident...)"
-          />
+    setLoading(true);
+    setError("");
+    setResult(null);
 
-          <button 
-            onClick={runMultiAgentAnalysis} 
-            disabled={loading}
-          >
-            {loading ? "AI Agents Working..." : " Run Multi-Agent Orchestra"}
-          </button>
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          claimId:
+            formData.claimId.trim() || null,
+          description:
+            formData.description.trim(),
+          patientName:
+            formData.patientName.trim(),
+          policyNumber:
+            formData.policyNumber.trim(),
+          amount: Number(formData.amount),
+        }),
+      });
 
-          {result && (
-            <div className="result">
-              <h3>Analysis Complete!</h3>
-              <div className="result-grid">
-                <div className="result-item">Intake Agent: Claim summarized</div>
-                <div className="result-item">Fraud Agent: 7% Risk</div>
-                <div className="result-item">Policy Agent: High Match</div>
-                <div className="result-item">Validation Agent: Valid</div>
-              </div>
-              <div className="final-result">
-                AUTO APPROVE<br />
-                <span>93% Confidence</span>
-              </div>
-            </div>
-          )}
-        </div>
+      const body = await response.json();
 
-        <p className="text-pink-200 mt-8">Modern • Colorful • Responsive</p>
-      </div>
-    </div>
-  );
+      if (!response.ok) {
+        const message = body.fieldErrors
+          ? Object.values(
+              body.fieldErrors
+            ).join(" ")
+          : body.message
+            || "Claim analysis failed.";
+
+        throw new Error(message);
+      }
+
+      setResult(body);
+
+    } catch (requestError) {
+      setError(
+        requestError.message
+        || "Unable to contact the backend."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Render form and result using result fields.
 }
-
-export default App;
