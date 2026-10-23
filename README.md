@@ -3,7 +3,7 @@
 **Modern React 19 Frontend** for the ClaimAI Multi-Agent AI Claims Processing Platform.
 
 ## 🚀 Live Demo
-**[https://apurupa810-dotcom.github.io/claim-ai-frontend/](https://apurupa810-dotcom.github.io/claim-ai-frontend/)**
+**[https://github.com/apurupa810-dotcom/claim-ai-frontend/](https://github.com/apurupa810-dotcom/claim-ai-frontend/)**
 
 ## Features
 
